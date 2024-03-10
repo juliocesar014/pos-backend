@@ -1,8 +1,11 @@
 package com.kamikase.web.posbackend.controller;
 
+import com.kamikase.web.posbackend.client.GetCampeonatoExternalAPIClient;
 import com.kamikase.web.posbackend.model.Clube;
+import com.kamikase.web.posbackend.model.dto.CampeonatoResponseExternalApiDTO;
 import com.kamikase.web.posbackend.service.ClubeService;
 import com.kamikase.web.posbackend.model.dto.ClubeResponseDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,12 @@ import java.util.List;
 public class ClubeController {
     @Autowired
     private ClubeService service;
+
+    @Autowired
+    private GetCampeonatoExternalAPIClient campeonatoClient;
+
+
+    private String token = "test_5153d70ebf9819096b1b26eea70d6b";
 
 
     @PostMapping
@@ -97,5 +106,12 @@ public class ClubeController {
         }
 
         return ResponseEntity.ok(dtos);
+    }
+
+    @GetMapping("/campeonatos")
+    public ResponseEntity<List<CampeonatoResponseExternalApiDTO>> listarCampeonatos() {
+        String bearerToken = "Bearer " + token; // Prefix with "Bearer "
+        List<CampeonatoResponseExternalApiDTO> campeonatos = campeonatoClient.listarCampeonatos(bearerToken);
+        return ResponseEntity.ok(campeonatos);
     }
 }
